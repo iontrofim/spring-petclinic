@@ -3,6 +3,7 @@ plugins {
   id 'application'
   id("pl.allegro.tech.build.axion-release") version "1.21.1"
   id 'checkstyle'
+  id 'maven-publish'
   id 'org.springframework.boot' version '4.0.3'
   id 'io.spring.dependency-management' version '1.1.7'
   id 'org.graalvm.buildtools.native' version '0.11.5'
@@ -22,9 +23,28 @@ java {
   }
 }
 
+publishing {
+  publications {
+    PetClinic(MavenPublication) {
+      from components.java
+    }
+  } 
+  repositories {
+    maven {
+      url = "http://localhost:8081/repository/maven-releases/"
+      credentials {
+  	username = project.findProperty('nexusUsername')
+  	password = project.findProperty('nexusPassword')
+      }
+      allowInsecureProtocol = true
+    }
+  }
+}
+
 repositories {
   mavenCentral()
 }
+
 
 application {
   mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
