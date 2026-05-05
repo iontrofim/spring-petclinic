@@ -30,7 +30,6 @@ application {
   mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
 }
 
-
 tasks.register('showTestResults') {
     dependsOn 'build' 
     
@@ -56,7 +55,6 @@ tasks.register('showTestResults') {
         }
     }
 }
-
 
 
 ext.checkstyleVersion = "12.3.1"
