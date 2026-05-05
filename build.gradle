@@ -1,5 +1,7 @@
 plugins {
   id 'java'
+  id 'application'
+  id("pl.allegro.tech.build.axion-release") version "1.21.1"
   id 'checkstyle'
   id 'org.springframework.boot' version '4.0.3'
   id 'io.spring.dependency-management' version '1.1.7'
@@ -12,7 +14,7 @@ plugins {
 gradle.startParameter.excludedTaskNames += [ "checkFormatAot", "checkFormatAotTest" ]
 
 group = 'org.springframework.samples'
-version = '4.0.0-SNAPSHOT'
+version = scmVersion.version
 
 java {
   toolchain {
@@ -23,6 +25,39 @@ java {
 repositories {
   mavenCentral()
 }
+
+application {
+  mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
+}
+
+
+tasks.register('showTestResults') {
+    dependsOn 'build' 
+    
+    group = 'Verification'
+    description = 'Builds the project and opens the HTML test report in the default browser.'
+
+    // 2. action after build
+    doLast {
+        // find generated report file
+        def reportFile = layout.buildDirectory.file("reports/tests/test/index.html").get().asFile
+        
+        if (reportFile.exists()) {
+		// check if opening in the browser is supported
+            if (java.awt.Desktop.isDesktopSupported()) {
+                println "Opening test report in browser..."
+                java.awt.Desktop.desktop.browse(reportFile.toURI())
+            } else {
+                println "Desktop UI not supported. View the report manually at:"
+                println "file://${reportFile.absolutePath}"
+            }
+        } else {
+            println "No test report found. Tests may not have executed."
+        }
+    }
+}
+
+
 
 ext.checkstyleVersion = "12.3.1"
 ext.springJavaformatCheckstyleVersion = "0.0.47"
