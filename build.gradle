@@ -30,6 +30,7 @@ application {
   mainClass = "org.springframework.samples.petclinic.PetClinicApplication"
 }
 
+// this line is added just because I need a new commit
 tasks.register('showTestResults') {
     dependsOn 'build' 
     
